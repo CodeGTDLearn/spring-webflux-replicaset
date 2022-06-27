@@ -1,6 +1,7 @@
 ## Spring-WebFlux-Replicaset
 
-### Table of Contents
+### Index
+* [DISCLAIMER](#disclaimer)
 * [WebFlux](#webflux)
 * [Application.Yml](#application_yml)
 * [Application Profiles](#application-profiles)
@@ -14,6 +15,21 @@
 * [Exceptions](#exceptions)
 * [Tests Junit 5](#tests-junit-5)
 * [GitGuardian pre commit-githook](#gitguardian)
+
+
+### Disclaimer
+1. This concept-proof is focused in test MongoDb
+    * GridFs "was not" explored in this concept-proof
+2. In real-life there is no scenerio with multiple Db-Connections, like those, studied in this concept-proof;
+3. For learning purpose, MongoDb were tested in 04 scenerios:
+    * By itself using docker-Compose
+    * By Testcontainers
+4. Modalities tested:
+    * replicaset singlenode without authentication
+    * replicaset singlenode with authentication
+    * stand-alone
+    * TestContainers
+    * Secrets
 
 ### WebFlux
 1. RestControllers
@@ -98,6 +114,13 @@
    4. [earthly.dev](https://earthly.dev/blog/docker-secrets/)
    5. [secured-mongodb-container](https://medium.com/@leonfeng/set-up-a-secured-mongodb-container-e895807054bd)
    6. [Docker Secret in Microservice](https://blogmilind.wordpress.com/2018/03/14/docker-secret-in-microservice/)
+6. Docker Obervations - Docker Folder:
+   1. Docker\mongo-secrets folder:
+      1. Should be tested in MongoDbClient (MongoCompass)
+      2. No API
+   2. Docker\mongo-Standalone
+      1. Should be tested in HttpClient (Postman)
+      1. No API
 
 ### Docker-Mongo-Replicaset
 1. Singlenode
@@ -114,13 +137,15 @@
          1. dynamic mongodb-keyfile (generate as a service in compose) 
          2. [3Nodes - Base for single node authentication](https://www.youtube.com/watch?v=-XzMfd4XQak)
             1. [GitHub](https://github.com/willitscale/learning-docker)
-2. Three nodes:
+2. Three nodes: (Aborted - Archived)
    1. **NOTE**: 
       1. This replica set is for *Local Development* purposes ONLY. 
          1. Run multiple nodes within a single machine is an anti-pattern, and MUST BE AVOIDED in Production.
       2. Multiple nodes requires:
          1. Multiple Vm's in the cloud
             1. IT CAN _**INCREASE**_ THE COST "CONSIDERABLY"
+      3. Only for test-reason because in production:
+         1. Each node must be in a different host
    2. Types:
       1. NoAuthentication
       2. Three nodes - Authenticated:
@@ -131,10 +156,12 @@
          5. [mongo-authentication](https://mkyong.com/mongodb/mongodb-authentication-example/)
          6. [MongoCli](https://www.mongodb.com/docs/manual/reference/configuration-file-settings-command-line
             -options-mapping/#std-label-conf-file-command-line-mapping/)
-3. StandAlone - ProfileDevelopment
-   1. Only archive because:
-      1. it does not allow transactions, therefore:
-         1. it does not run queues(CREATE+DELETE+UPDATE)
+3. StandAlone: (Aborted - Archived)
+   1. it does not allow transactions, therefore:
+      1. it does not run queues(CREATE+DELETE+UPDATE)
+4. Database Configurations (intentionnaly spllited):
+   1. ReplicasetAuthConfig
+   2. ReplicasetConfig
 
 ### Testcontainers
 * Containers
