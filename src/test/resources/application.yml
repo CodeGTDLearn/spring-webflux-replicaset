@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: test-rs-auth
+    active: test-tc-rs
 
     group:
       test-rs: log, test-singlenode

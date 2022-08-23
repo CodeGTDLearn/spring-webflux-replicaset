@@ -3,7 +3,7 @@ server:
 
 spring:
   profiles:
-    active: rs-auth
+    active: rs
     group:
       rs: singlenode, log
       rs-auth: singlenode-auth, log
