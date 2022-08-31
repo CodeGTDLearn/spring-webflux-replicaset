@@ -14,8 +14,9 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.EnabledIf;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
-import java.util.Arrays;
+import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 
 import static com.mongo.rs.core.databuilders.UserBuilder.userNoID;
@@ -181,132 +182,51 @@ public class TestcontainerCacheTest {
   @Test
   @EnabledIf(expression = enabledTest, loadContext = true)
   @Tag("replicaset-transaction")
-  @DisplayName("1 NoRollback")
-  public void saveNoRollback() {
+  @DisplayName("findById_thenMonoIsCached")
+  public void findById_simpleCacheable_thenMonoIsCached() {
+    User user = userNoID().create();
+    Mono<User> userMono = serviceCrud.save(user);
 
-    userNoId = userNoID().create();
-    User lastUser = userNoID().create();
-    List<User> userList = asList(userNoId, lastUser);
+    String id = userMono.block().getId();
 
-    RestAssuredWebTestClient
-         .given()
-         .webTestClient(mockedWebClient)
-         .body(userList)
+    Mono<User> userFromDb1 = serviceCrud.findById(id);
+    User user1 = userFromDb1.block();
 
-         .when()
-         .post(CRUD_SAVE_TRANSACT)
+    assertThat(user1).isNotNull();
+    assertThat(user1.getName()).isEqualTo(user.getName());
+    assertThat(user1.getId()).isEqualTo(user.getId());
 
-         .then()
-         .log()
-         .everything()
+    Mono<User> userFromDb2 = serviceCrud.findById(id);
+    User user2 = userFromDb2.block();
 
-         .statusCode(CREATED.value())
-         .body("size()", is(2))
-         .body("$", hasSize(2))
-         .body("name", hasItems(
-              userNoId.getName(),
-              lastUser.getName()
-                               ))
-         .body(matchesJsonSchemaInClasspath("contracts/transaction.json"))
-    ;
-
-    dbUtils.countAndExecuteFlux(serviceCrud.findAll(), 4);
+    assertThat(user2).isNotNull();
+    assertThat(user2.getName()).isEqualTo(user.getName());
+    assertThat(user2.getId()).isEqualTo(user.getId());
   }
 
   @Test
   @EnabledIf(expression = enabledTest, loadContext = true)
-  @Tags(value = {
-       @Tag("replicaset-transaction"),
-       @Tag("standalone")})
-  @DisplayName("3 saveWithID")
-  public void saveWithID() {
+  @Tag("replicaset-transaction")
+  @DisplayName("findById_MonoResultIsCached")
+  public void findById_fullCacheable_MonoResultIsCached() {
+    User user = userNoID().create();
+    Mono<User> userMono = serviceCrud.save(user);
 
-    User userIsolated = userNoID().create();
+    String id = userMono.block().getId();
 
-    RestAssuredWebTestClient
-         .given()
-         .webTestClient(mockedWebClient)
+    Mono<User> mono = serviceCrud.findById_withCache(id);
+    User user1 = mono.block();
 
-         .body(userIsolated)
+    assertThat(user1).isNotNull();
+    assertThat(user1.getName()).isEqualTo(user.getName());
+    assertThat(user1.getId()).isEqualTo(user.getId());
 
-         .when()
-         .post(CRUD_SAVE)
+    Mono<User> mono2 = serviceCrud.findById_withCache(id);
+    User user2 = mono2.block();
 
-         .then()
-         .log()
-         .everything()
-
-         .statusCode(CREATED.value())
-         .body("name", equalTo(userIsolated.getName()))
-         .body(matchesJsonSchemaInClasspath("contracts/save.json"))
-    ;
-
-    dbUtils.countAndExecuteFlux(serviceCrud.findAll(), 3);
+    assertThat(user2).isNotNull();
+    assertThat(user2.getName()).isEqualTo(user.getName());
+    assertThat(user2.getId()).isEqualTo(user.getId());
   }
-
-  @Test
-  public void givenItem_whenGetItemIsCalled_thenMonoIsCached() {
-    User glass = userNoID().create();
-//    Mono<Item> glass = itemService.save(new Item("glass", 1.00));
-
-    String id = glass.block().get_id();
-
-    Mono<Item> mono = itemService.getItem(id);
-    Item item = mono.block();
-
-    assertThat(item).isNotNull();
-    assertThat(item.getName()).isEqualTo("glass");
-    assertThat(item.getPrice()).isEqualTo(1.00);
-
-    Mono<Item> mono2 = itemService.getItem(id);
-    Item item2 = mono2.block();
-
-    assertThat(item2).isNotNull();
-    assertThat(item2.getName()).isEqualTo("glass");
-    assertThat(item2.getPrice()).isEqualTo(1.00);
-  }
-
-  @Test
-  public void givenItem_whenGetItemWithCacheIsCalled_thenMonoResultIsCached() {
-    Mono<Item> glass = itemService.save(new Item("glass", 1.00));
-
-    String id = glass.block().get_id();
-
-    Mono<Item> mono = itemService.getItem_withCache(id);
-    Item item = mono.block();
-
-    assertThat(item).isNotNull();
-    assertThat(item.getName()).isEqualTo("glass");
-    assertThat(item.getPrice()).isEqualTo(1.00);
-
-    Mono<Item> mono2 = itemService.getItem_withCache(id);
-    Item item2 = mono2.block();
-
-    assertThat(item2).isNotNull();
-    assertThat(item2.getName()).isEqualTo("glass");
-    assertThat(item2.getPrice()).isEqualTo(1.00);
-  }
-
-  @Test
-  public void givenItem_whenGetItemWithAddonsIsCalled_thenMonoResultIsCached() {
-    Mono<Item> glass = itemService.save(new Item("glass", 1.00));
-
-    String id = glass.block().get_id();
-
-    Mono<Item> mono = itemService.getItem_withAddons(id);
-    Item item = mono.block();
-
-    assertThat(item).isNotNull();
-    assertThat(item.getName()).isEqualTo("glass");
-    assertThat(item.getPrice()).isEqualTo(1.00);
-
-    Mono<Item> mono2 = itemService.getItem_withAddons(id);
-    Item item2 = mono2.block();
-
-    assertThat(item2).isNotNull();
-    assertThat(item2.getName()).isEqualTo("glass");
-    assertThat(item2.getPrice()).isEqualTo(1.00);
-  }
-
 
 }

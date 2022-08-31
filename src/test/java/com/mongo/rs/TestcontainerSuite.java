@@ -1,6 +1,7 @@
 package com.mongo.rs;
 
 
+import com.mongo.rs.modules.TestcontainerCacheTest;
 import com.mongo.rs.modules.TestcontainerTest;
 import com.mongo.rs.modules.TestcontainerTransactionsTest;
 import org.junit.platform.suite.api.IncludeTags;
@@ -12,7 +13,9 @@ import org.junit.platform.suite.api.SuiteDisplayName;
 @SuiteDisplayName("Testcontainer-Suite")
 @SelectClasses({
      TestcontainerTest.class,
-     TestcontainerTransactionsTest.class})
+     TestcontainerTransactionsTest.class,
+     TestcontainerCacheTest.class
+})
 @IncludeTags({"testcontainer"})
 public class TestcontainerSuite {
 }

@@ -2,6 +2,7 @@ package com.mongo.rs.modules.user;
 
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -21,6 +22,20 @@ public class UserServiceCrudImpl implements UserServiceCrud {
   public Mono<User> save(User project) {
 
     return userDAOCrud.save(project);
+  }
+
+  @Override
+  public Mono<User> findById(String id) {
+
+    return userDAOCrud.findById(id);
+  }
+
+  @Override
+  @Cacheable("items")
+  public Mono<User> findById_withCache(String id) {
+
+    return userDAOCrud.findById(id)
+                      .cache();
   }
 
   @Override
