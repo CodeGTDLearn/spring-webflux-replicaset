@@ -50,9 +50,9 @@ import static org.springframework.http.HttpStatus.OK;
      ╚══════════════════════════════════════════════════════════╝*/
 @Tags(value = {@Tag("testcontainer")})
 @Import({DbUtilsConfig.class})
-@DisplayName("Testcontainer")
+@DisplayName("1 Testcontainer")
 @ResourceConfig
-@ActiveProfiles("test-tc-compose")
+@ActiveProfiles(value = {"test-tc-compose", "test-tc-rs"})
 @Testcontainers
 public class TestcontainerTest {
 

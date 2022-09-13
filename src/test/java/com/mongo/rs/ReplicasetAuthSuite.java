@@ -11,7 +11,8 @@ import org.junit.platform.suite.api.SuiteDisplayName;
 @SuiteDisplayName("SingleNode-Rs-Auth-Suite")
 @SelectClasses({
      ReplicasetAuthTest.class,
-     ReplicasetAuthTransactionsTest.class})
+     ReplicasetAuthTransactionsTest.class,
+})
 @IncludeTags({"replicaset"})
 public class ReplicasetAuthSuite {
 }

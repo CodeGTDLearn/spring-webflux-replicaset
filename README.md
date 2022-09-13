@@ -261,6 +261,7 @@
    7. Source:
       1. [Detect secrets with a pre-commit-githook {export}](https://youtu.be/8bDKn3y7Br4)
       2. [Detect secrets with a pre-push-githook {env-var-file}](https://youtu.be/uc70CE1MXvM)
+
 ### Reactive Cache
    1. https://www.baeldung.com/spring-webflux-cacheable
    2. Reactive Redis:

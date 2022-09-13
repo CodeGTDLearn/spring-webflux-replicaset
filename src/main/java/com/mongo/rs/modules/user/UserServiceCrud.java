@@ -14,8 +14,6 @@ public interface UserServiceCrud {
 
   Mono<User> findById(String id);
 
-  Mono<User> findById_withCache(String id);
-
   Flux<User> findAll();
 
   Flux<User> saveTransact(List<User> userList);
