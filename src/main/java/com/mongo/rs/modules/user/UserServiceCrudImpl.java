@@ -30,13 +30,6 @@ public class UserServiceCrudImpl implements UserServiceCrud {
     return userDAOCrud.findById(id);
   }
 
-  @Override
-  @Cacheable("items")
-  public Mono<User> findById_withCache(String id) {
-
-    return userDAOCrud.findById(id)
-                      .cache();
-  }
 
   @Override
   public Flux<User> findAll() {

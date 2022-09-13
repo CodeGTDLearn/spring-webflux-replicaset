@@ -14,13 +14,9 @@
     </parent>
 
     <groupId>com.mongo</groupId>
-
     <artifactId>rs</artifactId>
-
     <version>0.0.1-SNAPSHOT</version>
-
     <name>rs</name>
-
     <description>Concept proof of Mongo Replicaset</description>
 
     <properties>

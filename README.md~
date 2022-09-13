@@ -115,7 +115,7 @@
 
 
 3. **The Docker Secret SUFFIX / PREFIX**
-   1. The 'secret environment variable' will be 'Environment' compose Key
+   1. The 'secret environment variable' will be 'Environtment' compose Key
    2. This 'variable' will receive the secret
    3. This 'variable' **MUST** have the suffix **_FILE**
    4. The secret given **MUST** have the prefix "**/run/secrets/**"
