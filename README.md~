@@ -112,7 +112,7 @@
       1. Docker-Secrets when using 'docker inspect':
          - will display "the secret's path" instead "the secret's content"
       2. HOWEVER, the 'sensitive content' will be available.
-   3. Docker inspect example:
+   3. Docker inspect example
 ```json
    "Env": [
        "ELASTICSEARCH_HOSTS=[\"http://elasticsearch:9200\"]", # Without docker-secrets

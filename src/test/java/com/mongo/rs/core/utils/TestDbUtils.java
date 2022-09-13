@@ -32,29 +32,32 @@ public class TestDbUtils {
 
   public Flux<User> cleanDbAndSaveList(List<User> list) {
 
-    return userDaoCrud.deleteAll()
-                      .thenMany(Flux.fromIterable(list))
-                      .flatMap(userDaoCrud::save)
-                      .doOnNext(item -> userDaoCrud.findAll())
-                      .doOnNext(item -> System.out.printf(
-                            ">=> FindAll DB Elements >=>\n" +
-                                 ">=> Saved 'User' in DB:\n" +
-                                 "    |> ID: %s\n" +
-                                 "    |> Name: %s\n\n"
-                            ,
-                            item.getId(),
-                            item.getName()
-                                                          ));
+    return
+         userDaoCrud
+              .deleteAll()
+              .thenMany(Flux.fromIterable(list))
+              .flatMap(userDaoCrud::save)
+              .doOnNext(item -> userDaoCrud.findAll())
+              .doOnNext(item -> System.out.printf(
+                   ">=> FindAll DB Elements >=>\n" +
+                        ">=> Saved 'User' in DB:\n" +
+                        "    |> ID: %s\n" +
+                        "    |> Name: %s\n\n"
+                   ,
+                   item.getId(),
+                   item.getName()
+              ));
   }
 
 
   public <E> void checkFluxListElements(Flux<E> listFlux, List<E> listCompare) {
 
-    StepVerifier.create(listFlux)
-                .recordWith(ArrayList::new)
-                .expectNextCount(listCompare.size())
-                .thenConsumeWhile(listCompare::equals)
-                .verifyComplete();
+    StepVerifier
+         .create(listFlux)
+         .recordWith(ArrayList::new)
+         .expectNextCount(listCompare.size())
+         .thenConsumeWhile(listCompare::equals)
+         .verifyComplete();
   }
 
   public void cleanTestDb() {
@@ -68,7 +71,7 @@ public class TestDbUtils {
          ">==================================================>\n" +
               ">===============> CLEAN-DB-TO-TEST >===============>\n" +
               ">==================================================>\n\n"
-                      );
+    );
   }
 
 }

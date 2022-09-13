@@ -59,7 +59,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 */
 @Tags(value = {@Tag("replicaset")})
 @Import({TestReplicasetConfig.class})
-@DisplayName("Replicaset Transactions")
+@DisplayName("2 Replicaset Transactions")
 @ResourceConfig
 @ActiveProfiles({"test-rs"})
 public class ReplicasetTransactionsTest {
@@ -118,7 +118,7 @@ public class ReplicasetTransactionsTest {
 
     globalAfterAll();
     globalTestMessage(testInfo.getDisplayName(), "class-end");
-    closeTcContainer();
+//    closeTcContainer();
   }
 
   @BeforeEach

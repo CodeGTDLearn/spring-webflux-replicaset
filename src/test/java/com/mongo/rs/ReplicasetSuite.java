@@ -11,7 +11,8 @@ import org.junit.platform.suite.api.SuiteDisplayName;
 @SuiteDisplayName("SingleNode|ThreeNodes: Rs-Suite")
 @SelectClasses({
      ReplicasetTest.class,
-     ReplicasetTransactionsTest.class})
+     ReplicasetTransactionsTest.class,
+})
 @IncludeTags({"replicaset"})
 public class ReplicasetSuite {
 }

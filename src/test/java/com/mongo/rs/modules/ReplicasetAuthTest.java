@@ -45,7 +45,7 @@ import static org.springframework.http.HttpStatus.*;
      ╚══════════════════════════════════════════════════════════╝*/
 @Tags(value = {@Tag("replicaset")})
 @Import({DbUtilsConfig.class})
-@DisplayName("Replicaset Auth")
+@DisplayName("1 Replicaset Auth")
 @ResourceConfig
 @ActiveProfiles({"test-rs-auth"})
 public class ReplicasetAuthTest {
